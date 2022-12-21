@@ -4,10 +4,11 @@ import java.io.InputStreamReader
 const val Row=3
 const val Col=3
 
-var board = Array(Row,{ CharArray(Col,{' '})})  //보드 2차원 배열
+var board = Array(Row,{ IntArray(Col,{0})})  //보드 2차원 배열
 var input = IntArray(2, { 0 })
 var br= BufferedReader(InputStreamReader(System.`in`))
 var tempP:Int=1
+var  winner:Int=0
 
 fun main(){
     /*
@@ -37,7 +38,9 @@ fun main(){
         PlayerInput()           //입력받기
 
         if(isWin( )){
-            println("Player${tempP} 승리!")
+            println("최종 결과!")
+            printBoard()
+            println("Player${winner} 승리!")
             break
         }
         if(tempP==1)
@@ -58,7 +61,12 @@ fun printBoard(){
     for((i,row) in board.withIndex()){
         print("$i ")
         for((j,column) in row.withIndex()){
-            print("${board[i][j]}")
+            if(board[i][j]==1)
+                print("O")
+            else if(board[i][j]==-1)
+                print("X")
+            else
+                print(" ")
             if(j<Col-1) print("|")
         }
         println()
@@ -74,7 +82,7 @@ fun printBoard(){
 }
 fun PlayerInput(){
     var temp:String;
-    println("Player${tempP} 입력(줄,칸): ")
+    print("Player${tempP} 입력(줄,칸): ")
     var(n,m)=br.readLine().split(",").map { it.toInt() }
     isInRange(n,m)  //입력 검사
 }
@@ -91,11 +99,11 @@ fun isInRange(a:Int,b:Int) {
 }
 
 fun isValid() {
-    if(board[input[0]][input[1]]==' ') {
+    if(board[input[0]][input[1]]==0) {
         if(tempP==1)
-            board[input[0]][input[1]]='O'
+            board[input[0]][input[1]]=1
         else
-            board[input[0]][input[1]]='X'
+            board[input[0]][input[1]]=-1
 
     }else{
         println("비어있지 않은 칸 입니다. 다시 선택하십시오")
@@ -105,41 +113,32 @@ fun isValid() {
 
 
 fun isWin() :Boolean {
-    var NowRes=1
-    for(i in 0 until Row){
-        for(j in 1 until Col){
-            if(board[i][j-1]!=' '&&board[i][j]!=' '){//가로 줄 검사
-                if(board[i][j-1]==board[i][j]) {
-                    NowRes+=1
-                }else {
-                    NowRes=0
-                    break
-                }
+    var HorRes = 0
+    var VerRes = 0
+    var DiaRes = 0
 
-//                if(board[j-1][i]==board[j][i]) {//세로 줄 검사
-//                    NowRes+=1
-//                    println("NowRes = $NowRes")
-//                }else {
-//                    NowRes=0
-//                    break
-//                }
+    for (i in 0 until Row) {
+        for (j in 0 until Col) {
+            HorRes += board[i][j]
+            VerRes += board[j][i]
+            DiaRes += board[j][j]
+        }
+        if (HorRes != 0 || VerRes != 0 || DiaRes != 0) {
+            //반환값
+            if (HorRes == Row || VerRes == Row || DiaRes == Row) {
+                winner = 1
+                return true //승리한 사람 있으면
+            } else if (HorRes == (-1 * Row) || VerRes == (-1 * Row) || DiaRes == (-1 * Row)) {
+                winner = 2
+                return true //승리한 사람 있으면
+            }else{
+                HorRes =0
+                VerRes =0
+                DiaRes =0
             }
-
-        }
-        if(NowRes<=Row){   //대각
-            //if()
-        }else{
-            break
         }
     }
 
-    if(NowRes==Row){
-        println("최종 결과!")
-        printBoard()
-        return true //승리한 사람 있으면
-    }else{
-        return false
-    }
-
+    return false
 
 }
