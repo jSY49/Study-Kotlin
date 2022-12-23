@@ -28,6 +28,7 @@ open class bird (var name:String,val wing:Int,var beak :String){
 class lark(name :String, wing : Int, beak: String ):bird(name,wing,beak){
 
     override fun fly(){     //override 하고 싶으면 상위클래스 동일 함수에 open 해줘야 함
+        super.fly()         //상위 클래스의 fly를 먼저 수행
         println("$name Fast Fly ")
     }
 
