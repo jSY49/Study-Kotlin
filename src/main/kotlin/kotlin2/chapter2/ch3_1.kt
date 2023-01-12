@@ -68,6 +68,18 @@ class Motobike(name: String,
 
 }
 
+//추상클래스의 선언
+abstract class Printer{
+    abstract fun print()
+}
+
+val myPrinter = object :Printer(){      //객체 인스턴스
+    override fun print() {              //추상 메서드의 구현
+        println("출력합니다. ")
+    }
+}
+
+
 fun main(){
 
     var car = Car("Martiz","red",1000.0,100.0);
@@ -81,5 +93,10 @@ fun main(){
     car.start()
     motor.start()
 
+
+    //--------------------
+
+    println("-------------------")
+    myPrinter.print()
 
 }
